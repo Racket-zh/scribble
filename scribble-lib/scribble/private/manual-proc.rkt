@@ -448,9 +448,9 @@
                       flow-spacer (make-flow (list res))))
     (define (get-label)
       (case mode
-        [(new make) "constructor"]
-        [(send) "method"]
-        [else (or kind "procedure")]))
+        [(new make) "构造函数"]
+        [(send) "方法"]
+        [else (or kind "函数")]))
     (append
      (list
       (list
@@ -1126,7 +1126,7 @@
             (append
              (list
               (list
-               ((if (zero? i) (add-background-label (or kind "value")) values)
+               ((if (zero? i) (add-background-label (or kind "值")) values)
                 (top-align
                  make-table-if-necessary
                  "argcontract"

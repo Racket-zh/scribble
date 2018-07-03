@@ -336,7 +336,7 @@
                      [form-proc (in-list form-procs)]
                      [i (in-naturals)])
             (list
-             ((if (zero? i) (add-background-label (or kind "syntax")) values)
+             ((if (zero? i) (add-background-label (or kind "语法")) values)
               (list
                ((or form-proc
                     (lambda (x)

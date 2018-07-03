@@ -904,9 +904,9 @@
      (defs+int [def] e ...)]))
 
 (define example-title
-  (make-paragraph (list "Example:")))
+  (make-paragraph (list "例如：")))
 (define examples-title
-  (make-paragraph (list "Examples:")))
+  example-title)
 
 (define-syntax pick-example-title
   (syntax-rules ()
