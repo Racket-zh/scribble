@@ -219,7 +219,7 @@
 
 (define (make-search-box top-path) ; appears on every page
   (let ([sa         string-append]
-        [emptylabel "...search manuals..."]
+        [emptylabel "…搜索手册…"]
         [dimcolor   "#888"])
     `(form ([class "searchform"])
        (input
@@ -227,7 +227,7 @@
          [style ,(sa "color: "dimcolor";")]
          [type "text"]
          [value ,emptylabel]
-         [title "Enter a search string to search the manuals"]
+         [title "输入搜索字符串以搜索手册"]
          [onkeypress ,(format "return DoSearchKey(event, this, ~s, ~s);"
                               (version) top-path)]
          [onfocus ,(sa "this.style.color=\"black\"; "
@@ -933,12 +933,12 @@
             (values prev (and (pair? (cdr l)) (cadr l)))
             (loop (cdr l) (car l))))))
 
-    (define top-content      "top")
-    (define contents-content "contents")
-    (define index-content    "index")
-    (define prev-content     '(larr " prev"))
-    (define up-content       "up")
-    (define next-content     '("next " rarr))
+    (define top-content      "顶层")
+    (define contents-content "目录")
+    (define index-content    "索引")
+    (define prev-content     '(larr " 前一页"))
+    (define up-content       "上一层")
+    (define next-content     '("后一页 " rarr))
     (define sep-element      '(nbsp nbsp))
 
     (define/public (derive-filename d ci ri depth) "bad.html")
@@ -990,8 +990,8 @@
                                            '(" "))
                             (part-title-content x)))
                    "\""))]
-                [(equal? x "index.html") (values x "the manual top")]
-                [(equal? x "../index.html") (values x "the documentation top")]
+                [(equal? x "index.html") (values x "手册的顶层")]
+                [(equal? x "../index.html") (values x "文档的顶层")]
                 [(string? x) (values x #f)]
                 [(path? x) (values (url->string* (path->url x)) #f)]
                 [else (error 'navigation "internal error ~e" x)]))
@@ -1007,12 +1007,12 @@
                                "#"
                                url))
           (make-attributes
-           `([title . ,(if title* (string-append label " to " title*) label)]
+           `([title . ,(if title* (string-append label "至" title*) label)]
              [data-pltdoc . "x"]
              ,@more)))))
       (define top-link
         (titled-url
-         "up" (if (path? up-path)
+         "上" (if (path? up-path)
                   (url->string* (path->url up-path))
                   "../index.html")
          `[onclick . ,(format "return GotoPLTRoot(\"~a\");" (version))]))
@@ -1042,8 +1042,8 @@
                 sep-element
                 (make-element
                  (cond [(not parent) "nonavigation"]
-                       [prev (titled-url "backward" prev)]
-                       [else (titled-url "backward" "index.html"
+                       [prev (titled-url "后退" prev)]
+                       [else (titled-url "后退" "index.html"
                                          #:title-from
                                          (and (part? parent) parent))])
                  prev-content)
@@ -1052,19 +1052,19 @@
                  (cond
                    [(and (part? parent) (toc-part? parent ri)
                          (part-parent parent ri))
-                    (titled-url "up" parent)]
-                   [parent (titled-url "up" "index.html" #:title-from parent)]
+                    (titled-url "上" parent)]
+                   [parent (titled-url "上" "index.html" #:title-from parent)]
                    ;; up-path = #t => go up to the start page, using
                    ;; cookies to get to the user's version of it (see
                    ;; scribblings/main/private/utils for the code that
                    ;; creates these cookies.)
                    [(eq? #t up-path) top-link]
-                   [up-path (titled-url "up" up-path)]
+                   [up-path (titled-url "上" up-path)]
                    [else "nonavigation"])
                  up-content)
                 sep-element
                 (make-element
-                 (if next (titled-url "forward" next) "nonavigation")
+                 (if next (titled-url "前进" next) "nonavigation")
                  next-content)))))
       (define navbar
         `(div ([class ,(if top? "navsettop" "navsetbottom")])
@@ -1317,11 +1317,17 @@
                            (if (path? p)
                                (url->string* (path->url (path->complete-path p)))
                                p))])
-             `((img
-                ([src ,srcref]
+             `((,(if svg? 'object 'img)
+                ([,(if svg? 'data 'src) ,srcref]
                  [alt ,(content->string (element-content e))]
+                 ,@(if svg?
+                       `([type "image/svg+xml"])
+                       null)
                  ,@sz
-                 ,@(attribs))))))]
+                 ,@(attribs))
+                ,@(if svg? 
+                      `((param ([name "src"] [value ,srcref])))
+                      null)))))]
         [(element-style-property-matching e script-property?)
          => 
          (lambda (v)
@@ -1490,8 +1496,8 @@
                   (list
                    (add-padding
                     cvt
-                    `(img
-                      ([src ,(install-file "pict.svg" bstr)]
+                    `(object
+                      ([data ,(install-file "pict.svg" bstr)]
                        [type "image/svg+xml"]))))))]
           [else #f])))
 
@@ -1607,7 +1613,7 @@
        (cond
         [(symbol? name)
          (case name
-           [(italic) '([style "font-style: italic"])]
+           [(italic) '([style "font-family: 楷体"])]
            [(bold) '([style "font-weight: bold"])]
            [(tt) '([class "stt"])]
            [(roman) '([class "sroman"])]
@@ -1990,7 +1996,7 @@
       (eq? top (collected-info-parent (part-collected-info d ri))))
 
     (define/override (get-onthispage-label)
-      `((div ([class "tocsubtitle"]) "On this page:")))
+      `((div ([class "tocsubtitle"]) "在本页中：")))
 
     (define/override (toc-wrap p)
       (list p))
