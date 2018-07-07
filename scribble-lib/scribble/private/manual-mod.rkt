@@ -30,15 +30,15 @@
 
 ;; @deprecated[Precontent]{Precontent ... }
 ;; produces a nested paragraph with a yellow NOTE label to warn readers of deprecated modules 
-(define (deprecated #:what [what "library"]
+(define (deprecated #:what [what "库"]
                     replacement
                     . additional-notes)
   (apply nested #:style 'inset
-         (yellow (bold "NOTE:"))
-         " This " what
-         " is deprecated; use "
+         (yellow (bold "注意："))
+         "该" what
+         "已被废弃；请改用"
          replacement
-         ", instead. "
+         "。"
          additional-notes))
 
 (define (yellow . content)
