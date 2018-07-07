@@ -118,11 +118,11 @@
    (let ([nl (make-element 'newline '("\n"))])
      (case (length auths)
        [(1) auths]
-       [(2) (list (car auths) nl "and " (cadr auths))]
+       [(2) (list (car auths) nl "和" (cadr auths))]
        [else (let ([r (reverse auths)])
                (append (add-between (reverse (cdr r))
-                                    (make-element #f (list "," nl)))
-                       (list "," nl "and " (car r))))]))))
+                                    (make-element #f (list "，" nl)))
+                       (list "，" nl "以及" (car r))))]))))
 
 (define (author+email name email #:obfuscate? [obfuscate? #f])
   (make-element #f
