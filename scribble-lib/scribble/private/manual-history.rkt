@@ -16,10 +16,10 @@
  (define-splicing-syntax-class clause
    #:attributes (e)
    [pattern (~seq #:added vers)
-            #:attr e #'(history-entry "Added" vers (quote-syntax vers) '("."))]
+            #:attr e #'(history-entry "添加" vers (quote-syntax vers) '("。"))]
    [pattern (~seq #:changed vers content)
-            #:attr e #'(history-entry "Changed" vers (quote-syntax vers)
-                                      (list ": " content))]))
+            #:attr e #'(history-entry "修改" vers (quote-syntax vers)
+                                      (list "；" content))]))
 
 (define-syntax (history stx)
   (syntax-parse stx
@@ -51,9 +51,10 @@
                   null
                   (list (linebreak)))
               (history-entry-what e)
-              " in version "
-              vers
+              "与"
               (if (and pkg (zero? i))
-                  (list " of package " (tt pkg))
+                  (list "package " (tt pkg) "的")
                   null)
+              vers
+              "版本"
               (history-entry-expl e)))))))

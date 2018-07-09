@@ -30,15 +30,15 @@
 
 ;; @deprecated[Precontent]{Precontent ... }
 ;; produces a nested paragraph with a yellow NOTE label to warn readers of deprecated modules 
-(define (deprecated #:what [what "库"]
+(define (deprecated #:what [what "library"]
                     replacement
                     . additional-notes)
   (apply nested #:style 'inset
-         (yellow (bold "注意："))
-         "该" what
-         "已被废弃；请改用"
+         (yellow (bold "NOTE:"))
+         " This " what
+         " is deprecated; use "
          replacement
-         "。"
+         ", instead. "
          additional-notes))
 
 (define (yellow . content)
@@ -214,7 +214,7 @@
    #:style (make-style #f
                        (list "plainlink"
                              (hover-property
-                              (format "Install this package using `raco pkg install ~a`"
+                              (format "使用“raco pkg install ~a”安装该package"
                                       pkg))))))
 
 (define (*defmodule names modpaths module-path packages link-target? lang content req)
@@ -229,13 +229,10 @@
                (make-omitable-paragraph
                 (list (elem #:style "RpackageSpec"
                             (list* (smaller 'nbsp
-                                            (format "package~a:" 
-                                                    (if (null? (cdr pkgs))
-                                                        ""
-                                                        "s")))
+                                            "package：")
                                    " "
                                    (add-between (map racketpkgname pkgs)
-                                                ", "))))))))))
+                                                "、"))))))))))
     (define (flow-width f) (apply max (map block-width f)))
     (define libs-specs
       ;; make-desc  : element -> flow
