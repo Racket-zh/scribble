@@ -51,7 +51,7 @@
                   null
                   (list (linebreak)))
               (history-entry-what e)
-              "与"
+              "于"
               (if (and pkg (zero? i))
                   (list "package " (tt pkg) "的")
                   null)
