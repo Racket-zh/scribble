@@ -674,7 +674,7 @@ blockquote > blockquote.SVInsetFlow {
     font-size: 82%;
 }
 .SAuthorList:before {
-    content: "by ";
+    content: "作者：";
 }
 .author {
     display: inline;
