@@ -19,7 +19,7 @@
             #:attr e #'(history-entry "添加" vers (quote-syntax vers) '("。"))]
    [pattern (~seq #:changed vers content)
             #:attr e #'(history-entry "修改" vers (quote-syntax vers)
-                                      (list "；" content))]))
+                                      (list "：" content))]))
 
 (define-syntax (history stx)
   (syntax-parse stx
