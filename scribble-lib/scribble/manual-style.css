@@ -155,7 +155,7 @@ body {
 .maincolumn {
     width: auto;
     margin-top: 4rem;
-    margin-left: 17rem;
+    margin-left: 21rem;
     margin-right: 2rem;
     margin-bottom: 10rem; /* to avoid fixed bottom nav bar */
     max-width: 700px;
@@ -181,7 +181,6 @@ a:hover {
 
 .navsettop, .navsetbottom {
     left: 0;
-    width: 15rem;
     height: 6rem;
     font-family: 'Fira', sans-serif;
     font-size: 0.9rem;
@@ -261,9 +260,9 @@ a:hover {
 
 .searchbox {
     font-size: 0.9rem;
-    width: 12rem;
+    width: 15rem;
     margin: 1rem;
-    padding: 0.25rem 0.4rem ;
+    padding: 0.25rem 0.4rem;
     vertical-align: middle;
     background-color: white;
     font-family: 'Fira-Mono', monospace;
@@ -287,7 +286,7 @@ a:hover {
     position: absolute;
     float: none;
     top: 0.25rem;
-    left: 17rem;
+    left: 21rem;
     z-index: 11000;
     height: 2em;
     font-size: 70%;
@@ -414,11 +413,10 @@ a:hover {
     float: none;
     left: 0;
     top: 0rem;
-    width: 14rem;
+    width: 17rem;
     padding: 7rem 0.5rem 0.5rem 0.5rem;
     background-color: hsl(216, 15%, 70%);
     margin: 0;
-
 }
 
 .tocset td {
