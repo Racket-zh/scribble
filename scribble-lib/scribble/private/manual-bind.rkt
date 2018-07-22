@@ -72,13 +72,13 @@
            (make-element
             (intern-hover-style
              (string-append
-              "Provided from: "
-              (string-join (map ~s from) ", ")
+              "提供自："
+              (string-join (map ~s from) "、")
               (let ([from-pkgs (resolve-get/tentative p ri '(exporting-packages #f))])
                 (if (and from-pkgs (pair? from-pkgs))
                     (string-append
-                     " | Package: "
-                     (string-join (map ~a from-pkgs) ", "))
+                     " | Package："
+                     (string-join (map ~a from-pkgs) "、"))
                     ""))))
             e)
            e)))
