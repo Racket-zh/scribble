@@ -14,62 +14,53 @@
 
 @(define sub*section subsection)
 
-@title[#:tag "getting-started"]{Getting Started}
+@title[#:tag "getting-started"]{入门}
 
-No matter what you want to do with Scribble, it's best to start by
-generating a few simple HTML and/or PDF documents. This chapter steps
-you through the basics, and it ends in @secref["roadmap"] with
-goal-specific advice on how to continue.
+不管你打算用 Scribble 做什么，去生成一些简单的 HTML 和/或 PDF 文档是个好的开始。
+这一章带你过一遍基础的东西，以 @secref["roadmap"] 结尾，其中包含一些目标明确的
+如何继续学习的建议。
 
-@section[#:tag "first-example"]{A First Example}
+@section[#:tag "first-example"]{第一个例子}
 
-Create a file @filepath{mouse.scrbl} with this content:
+创建一个包含以下内容的文件 @filepath{mouse.scrbl}：
 
           @samplemod|{
             #lang scribble/base
 
-            @title{On the Cookie-Eating Habits of Mice}
+            @title{论老鼠吃饼干的习惯}
 
-            If you give a mouse a cookie, he's going to ask for a
-            glass of milk.
+            如果你给老鼠一块饼干，他会再要一杯牛奶。
           }|
 
-The first line's @racket[#, @hash-lang[] #,
-@racketmodname[scribble/base]] indicates that the file implements a
-Scribble document. The document starts in ``text mode,'' and the
-@litchar["@"] character escapes to operators like @racket[title],
-where the curly braces return to text mode for the arguments to the
-operator. The rest is document content.
+第一行 @racket[#, @hash-lang[] #, @racketmodname[scribble/base]] 表明该文件是个
+Scribble 文档。文档起始于“文本模式”，@litchar["@"] 字符用于转义像 @racket[title]
+这类的操作符，花括号中的参数以“文本模式”解读传递给操作符。剩余部分是文档内容。
 
-Now run the @exec{scribble} command-line program, specifying a mode
-for the kind of document that you want as output:
+现在运行 @exec{scribble} 命令行程序，指定你希望输出的文档格式：
 
        @itemize[
 
-         @item{Run
+         @item{执行
                @commandline{scribble mouse.scrbl}
-              to generate HTML as @filepath{mouse.html}.  You may
-              notice that the apostrophe in ``he's'' turned into a
-              curly apostrophe.}
+              生成 HTML 到 @filepath{mouse.html}。
+              }
 
-         @item{Run
+         @item{执行
                @commandline{scribble --htmls mouse.scrbl}
-              to generate HTML as @filepath{mouse/index.html}.
-              Sub-sections (which we add next) will appear as separate
-              HTML files in the @filepath{mouse} directory.}
+              生成 HTML 到 @filepath{mouse/index.html}。各子节（后面我们会讲到）
+              将生成到 @filepath{mouse} 目录下的独立文件。
+              }
 
-         @item{Run
+         @item{执行
                 @commandline{scribble --pdf mouse.scrbl}
-               to generate PDF as @filepath{mouse.pdf}. This will
-               work only if you have @exec{pdflatex} installed.
-               If you'd like to see the intermediate Latex, try
+               生成 PDF 文件 @filepath{mouse.pdf}. 只有在安装了 @exec{pdflatex}
+               的情况下这个才可用。如果你想查看 latex 格式的中间文件，尝试执行
                 @commandline{scribble --latex mouse.scrbl}
-               to generate @filepath{mouse.tex}.}
-
+               生成 @filepath{mouse.tex}。
+               }
           ]
 
-See @secref["running"] for more information on the @exec{scribble}
-command-line tool.
+在章节 @secref["running"] 查看更多关于 @exec{scribble} 命令行工具的信息。
 
 @section{Multiple Sections}
 
@@ -180,7 +171,7 @@ content look right by changing the first line to
           }|
 
 If you're instead working toward Racket library documentation,
-try changing the first line to 
+try changing the first line to
 
           @samplemod|{
             #lang scribble/manual
@@ -204,7 +195,7 @@ introductory text can be marked as an abstract:
 
             @title{On the Cookie-Eating Habits of Mice}
 
-            @abstract{If you give a mouse a cookie, he's going to 
+            @abstract{If you give a mouse a cookie, he's going to
                       ask for a glass of milk.}
 
             @section{The Consequences of Milk}
@@ -265,7 +256,7 @@ The @racket[centered] operation centers a flow of text:
            If a mouse eats all your cookies, put up a sign that says
            @centered{
              @bold{Cookies Wanted}
-             
+
              @italic{Chocolate chip preferred!}
            }
            and see if anyone brings you more.
@@ -277,7 +268,7 @@ which renders as
            If a mouse eats all your cookies, put up a sign that says
            @centered{
              @bold{Cookies Wanted}
-             
+
              @italic{Chocolate chip preferred!}
            }
            and see if anyone brings you more.
@@ -304,7 +295,7 @@ in the use of @litchar{[}...@litchar{]} for the arguments to
            @centered{@bold{Notice to Mice}}
 
            @itemlist[@item{We have cookies for you.}
-                     @item{If you want to eat a cookie, 
+                     @item{If you want to eat a cookie,
                            you must bring your own straw.}]
          }|
 
@@ -314,7 +305,7 @@ which renders as
            @centered{@bold{Notice to Mice}}
 
            @itemlist[@item{We have cookies for you.}
-                     @item{If you want to eat a cookie, 
+                     @item{If you want to eat a cookie,
                            you must bring your own straw.}]
          }
 
@@ -546,7 +537,7 @@ For more information on the syntax of @litchar["@"], see
 as brackets like @litchar["|{"]...@litchar["}|"] for text-mode
 arguments while disabling @litchar["@"] between the brackets.
 
-@; ---------------------------------------- 
+@; ----------------------------------------
 @section{Decoding Sequences}
 
 In a document that starts @racket[#, @hash-lang[] #,
@@ -653,7 +644,7 @@ images. For example,
 @sample|{
   @(require pict)
 
-  This cookie has lost its chocolate chips: 
+  This cookie has lost its chocolate chips:
   @(colorize (filled-ellipse 40 40) "beige").
 }|
 
