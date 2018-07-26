@@ -62,95 +62,83 @@ Scribble 文档。文档起始于“文本模式”，@litchar["@"] 字符用于
 
 在章节 @secref["running"] 查看更多关于 @exec{scribble} 命令行工具的信息。
 
-@section{Multiple Sections}
+@section{多个小节}
 
-Add more text to @filepath{mouse.scrbl} so that it looks like this:
+在 @filepath{mouse.scrbl} 中添加更多内容：
 
           @samplemod|{
             #lang scribble/base
 
-            @title{On the Cookie-Eating Habits of Mice}
+            @title{论老鼠吃饼干的习惯}
 
-            If you give a mouse a cookie, he's going to ask for a
-            glass of milk.
+            如果你给老鼠一块饼干，他会再要一杯牛奶。
 
-            @section{The Consequences of Milk}
+            @section{给牛奶的后果}
 
-            That ``squeak'' was the mouse asking for milk. Let's
-            suppose that you give him some in a big glass.
+            老鼠发出``吱吱'''要牛奶。假设你给他一大杯牛奶。
 
-            He's a small mouse. The glass is too big---way too
-            big. So, he'll probably ask you for a straw. You might as
-            well give it to him.
+            他是一只小老鼠，杯子太大---过于大了。于是他可能又要跟你要稻草了。你可能也会给他。
 
-            @section{Not the Last Straw}
+            @section{不是最后一根稻草}
 
-            For now, to handle the milk moustache, it's enough to give
-            him a napkin. But it doesn't end there... oh, no.
+            现在，为了处理沾满牛奶的胡须，要给他一张餐巾。但这没有完...哦，天那。
           }|
 
-        Now, after the first paragraph of the paper, we have two
-        sub-sections, each created by calling @racket[section] to
-        generate a sub-section declaration. The first sub-section has
-        two paragraphs. The second section, as initiated by the result
-        of the second @racket[section] call, has a single paragraph.
+        现在文档第一段之后多了两个小节，每个小节通过调用 @racket[section] 创建。
+        第一个小节包含两段文字。第二节，从第二个 @racket[section] 调用开始，包含
+        一个段落。
 
-Run the @exec{scribble} command(s) from @secref["first-example"]
-again. You may notice the curly double-quotes in the output, and
-the @litchar{---} turned into an em dash.
+再次执行 @secref["first-example"] 中示例过的 @exec{scribble} 命令。你可能已经注
+意到了结果中的双引号以及 @litchar{---} 转换成的破折号。
 
 @;----------------------------------------
-@section{Splitting the Document Source}
+@section{分割文档源码}
 
-As a document grows larger, it's better to split sections into
-separate source files. The @racket[include-section] operation
-incorporates a document defined by a @filepath{.scrbl} file into a
-larger document.
+当文档变得越来越大，将各小节分割到不同的源文件更好。@racket[include-section] 操作
+符可以用来将多个 @filepath{.scrbl} 文件合并成一个文档。
 
-To split the example document into multiple files, change
-@filepath{mouse.scrbl} to just
+将前面的示例文档分割成多个文件，把 @filepath{mouse.scrbl} 改成
 
           @samplemod|{
             #lang scribble/base
 
-            @title{On the Cookie-Eating Habits of Mice}
+            @title{论老鼠吃饼干的习惯}
 
-            If you give a mouse a cookie, he's going to ask for a
-            glass of milk.
+            如果你给老鼠一块饼干，他会再要一杯牛奶。
 
             @include-section["milk.scrbl"]
             @include-section["straw.scrbl"]
           }|
 
-Create @filepath{milk.scrbl} and @filepath{straw.scrbl} in the same
-directory as @filepath{mouse.scrbl}. In @filepath{milk.scrbl}, put
+在 @filepath{mouse.scrbl} 所在目录创建 @filepath{milk.scrbl} 和 @filepath{straw.scrbl}
+文件，在 @filepath{milk.scrbl} 中添加内容：
 
          @samplemod|{
             #lang scribble/base
 
-            @title{The Consequences of Milk}
+            @title{给牛奶的后果}
 
-            That ``squeak'' was the mouse asking for milk...
+            老鼠发出``吱吱'''要牛奶。假设你给他一大杯牛奶。
+
+            他是一只小老鼠，杯子太大---过于大了。于是他可能又要跟你要稻草了。你可能也会给他。
           }|
 
-and in @filepath{straw.scrbl}, put
+在 @filepath{straw.scrbl} 中添加：
 
          @samplemod|{
             #lang scribble/base
 
-            @title{Not the Last Straw}
+            @title{不是最后一根稻草}
 
-            For now, to handle the milk moustache, ...
+            现在，为了处理沾满牛奶的胡须，要给他一张餐巾。但这没有完...哦，天那。
           }|
 
-Notice that the new files both start with @hash-lang[], like the
-original document, and the @racket[section]s from the original
-document become @racket[title]s in the new documents. Both
-@filepath{milk.scrbl} and @filepath{straw.scrbl} are documents in
-their own right with their own titles, and they can be individually
-rendered using @exec{scribble}. Running @exec{scribble} on
-@filepath{mouse.scrbl}, meanwhile, incorporates the smaller documents
-into one document that is the same as before.
+--------------------------------------------------------------------------------
+注意到新建的文件和之前的文档一样，也都以 @hash-lang[] 开头，不过原来文档中的
+@racket[section] 变成了 @racket[title]。
+@filepath{milk.scrbl} 和 @filepath{straw.scrbl} 是独立的文档，有自己的标题，它们
+也可以独立的通过 @exec{scribble} 命令渲染。同时当使用 @exec{scribble} 渲染
+@filepath{mouse.scrbl} 时，将把这些较小的文件合并成一个，和未分割前的结果一致。
 
 @; ----------------------------------------
 @section{Document Styles}
