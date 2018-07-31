@@ -133,7 +133,6 @@ Scribble 文档。文档起始于“文本模式”，@litchar["@"] 字符用于
             现在，为了处理沾满牛奶的胡须，要给他一张餐巾。但这没有完...哦，天那。
           }|
 
---------------------------------------------------------------------------------
 注意到新建的文件和之前的文档一样，也都以 @hash-lang[] 开头，不过原来文档中的
 @racket[section] 变成了 @racket[title]。
 @filepath{milk.scrbl} 和 @filepath{straw.scrbl} 是独立的文档，有自己的标题，它们
@@ -141,183 +140,158 @@ Scribble 文档。文档起始于“文本模式”，@litchar["@"] 字符用于
 @filepath{mouse.scrbl} 时，将把这些较小的文件合并成一个，和未分割前的结果一致。
 
 @; ----------------------------------------
-@section{Document Styles}
+@section{文档样式}
 
-Scribble currently supports only one form of HTML output. You can
-replace the @filepath{scribble.css} file for the generated pages, and
-that's about it. (We expect to add more styles in the future.)
+Scribble 当前仅支持一种形式的 HTML 输出。你可以替换输出页面的样式文件
+@filepath{scribble.css}，对于 HTML 输出的样式，能做的应该就只是这样了。（我们
+期望未来添加更多的样式。）
 
-For Latex-based PDF output, Scribble includes support for
-multiple page-layout configurations. The @filepath{mouse.scrbl}
-example so far uses the default Latex style. If you plan on submitting
-the paper to a workshop on programming languages, then---well, you
-probably need a different topic. But you can start making the current
-content look right by changing the first line to
+对于基于 Latex 的 PDF 输出，Scribble 内置多种页面布局支持。@filepath{mouse.scrbl}
+例子使用了默认的 Latex 样式。如果你希望提交关于该文章到一个编程语言的研讨会---
+当然，你可能应该考虑换个话题---首先，你可以将第一行修改为：
 
           @samplemod|{
             #lang scribble/sigplan
           }|
 
-If you're instead working toward Racket library documentation,
-try changing the first line to
+如果你在准备一份 Racket 库文档，将第一行修改为：
 
           @samplemod|{
             #lang scribble/manual
           }|
 
-which produces output with a separate title page, initial content on
-that page (intended as a brief orientation to the document), and
-top-level sections turned into chapters that each start on a new page.
-If you have split the document into multiple files, the first line of
-the main document file determines the output format.
+其输出中将会有一个单独的标题页，该页包含文档摘要，且最上一级的小节变成会另起一页
+开始的章节。如果将文档分割成多个文件，主文档的第一行决定输出的格式。
 
-Using @racketmodname[scribble/sigplan] or
-@racketmodname[scribble/manual] does not change the rendered HTML for
-a document---aside from @racketmodname[scribble/manual] adding a
-version number---but it changes the set of bindings available in the
-document body. For example, with @racketmodname[scribble/sigplan], the
-introductory text can be marked as an abstract:
+使用 @racketmodname[scribble/sigplan] 或者 @racketmodname[scribble/manual]
+不会改变文档渲染出的 HTML---除了 @racketmodname[scribble/manual] 会给文档添加
+一个版本号外---不过它会改变文档中可用的绑定。例如，
+@racketmodname[scribble/sigplan] 格式的文档中，介绍文字可以使用 @racket[abstract] 标记：
 
           @samplemod|{
             #lang scribble/sigplan
 
-            @title{On the Cookie-Eating Habits of Mice}
+            @title{论老鼠吃饼干的习惯}
 
-            @abstract{If you give a mouse a cookie, he's going to
-                      ask for a glass of milk.}
+            @abstract{如果你给老鼠一块饼干，他会再要一杯牛奶。}
 
-            @section{The Consequences of Milk}
+            @section{给牛奶的后果}
 
             ....}|
 
-When rendered as HTML, the abstract shows up as an inset paragraph. If
-you try to use @racket[abstract] with the
-@racketmodname[scribble/base] or @racketmodname[scribble/manual]
-language, then you get an error, because @racket[abstract] is not
-defined.
+当渲染为 HTML 时，@racket[abstract] 标记的部分显示为一个插入的自然段。如果在
+@racketmodname[scribble/base] 或 @racketmodname[scribble/manual]
+文档语言中使用 @racket[abstract]，将得到一个错误，因为在它们中 @racket[abstract]
+未定义。
 
-When a document is implemented across multiple files, changing the
-language of the main document can set the style for all of the parts,
-but it does not introduce bindings into the other part files. For
-example, if you change the language of @filepath{mouse.scrbl} to
-@racketmodname[scribble/sigplan], then @racket[abstract] becomes
-available in @filepath{mouse.scrbl} but not in @filepath{milk.scrbl}
-or @filepath{straw.scrbl}. In other words, operator names are
-lexically scoped.
+当一个文档通过多个文件实现，改变主文档的语言将改变文档所有部分的样式设定，但是
+它不会为各子文件引入该语言的绑定。例如，如果你改变了 @filepath{mouse.scrbl} 的
+语言为 @racketmodname[scribble/sigplan]，那么 @racket[abstract] 将在
+@filepath{mouse.scrbl} 中可用，但在 @filepath{milk.scrbl} 或
+@filepath{straw.scrbl} 中仍不可用。换句话说，操作符名字是词法作用域的。
 
 @; ----------------------------------------
-@section{More Functions}
+@section{更多函数}
 
-The @racketmodname[scribble/base] language provides a collection of
-basic operations (and The @racketmodname[scribble/sigplan] and
-@racketmodname[scribble/manual] are supersets of
-@racketmodname[scribble/base]). Many of the operations are style
-variations that you can apply to text:
+@racketmodname[scribble/base] 语言提供了一组基本操作
+（@racketmodname[scribble/sigplan] 和 @racketmodname[scribble/manual] 是
+@racketmodname[scribble/base] 的超集）。提供的这些操作很多是可以引用于文本的样式。
 
           @sample|{
-            He's a @smaller{small mouse}. The glass is too
-            @larger{big}---@bold{way @larger{too @larger{big}}}. So, he'll
-            @italic{probably} ask you for a straw.
+            他是一只@smaller{小老鼠}，杯子太@larger{大}---
+            @bold{@larger{过于@larger{大}了}}。于是他@italic{可能}又要跟你要稻草了。
+            你可能也会给他。
           }|
 
-which renders as
+它将渲染得到：
 
           @result{
-            He's a @smaller{small mouse}. The glass is too
-            @larger{big}---@bold{way @larger{too @larger{big}}}. So, he'll
-            @italic{probably} ask you for a straw.
+            他是一只@smaller{小老鼠}，杯子太@larger{大}---
+            @bold{@larger{过于@larger{大}了}}。于是他@italic{可能}又要跟你要稻草了。
+            你可能也会给他。
           }
 
-As you would expect, calls to functions like @racket[smaller],
-@racket[larger], and @racket[bold] can be nested in other calls. They
-can also be nested within calls to @racket[title] or @racket[section]:
+你可能已经预料到了，诸如 @racket[smaller]、@racket[larger] 和 @racket[bold]
+这样的函数调用可能嵌套在其它函数调用中，它们也能嵌套于 @racket{title} 或
+@racket{section} 中。
 
           @sample|{
-            @section{@italic{Not} the Last Straw}
+            @section{@italic{不是}最后一根稻草}
           }|
 
-@sub*section{Centering}
+@sub*section{居中}
 
-The @racket[centered] operation centers a flow of text:
+@racket[centered] 操作符使文本居中：
 
          @sample|{
-           If a mouse eats all your cookies, put up a sign that says
+           如果老鼠吃完了你的所有饼干，然后举个牌子写着
            @centered{
-             @bold{Cookies Wanted}
+             @bold{要饼干}
 
-             @italic{Chocolate chip preferred!}
+             @italic{有巧克力更好！}
            }
-           and see if anyone brings you more.
+           看有人会给你些吧。
         }|
 
-which renders as
+它渲染得到
 
        @result{
-           If a mouse eats all your cookies, put up a sign that says
-           @centered{
-             @bold{Cookies Wanted}
+         如果老鼠吃完了你的所有饼干，然后举个牌子写着
+         @centered{
+           @bold{要饼干}
 
-             @italic{Chocolate chip preferred!}
-           }
-           and see if anyone brings you more.
+           @italic{有巧克力更好！}
+         }
+         看有人会给你些吧。
        }
 
-@sub*section{Margin Notes}
+@sub*section{边注}
 
-The @racket[margin-note] operation is used in a similar way, but the
-rendered text is moved to the margins.
-@margin-note*{If you use @racket[margin-note], then the content shows
-             up over here.}
+@racket[margin-note] 操作符的使用方式和上面无异，但是将渲染的文本移动到边缘。
+@margin-note*{如果你使用 @racket[margin-note]，内容显示在这。}
 
-@sub*section{Itemizations}
+@sub*section{枚举}
 
-The @racket[itemlist] operation creates a sequence of bulleted text,
-where the @racket[item] operation groups text to appear in a single
-bullet. The @racket[itemlist] operation is different from the others
-that we have seen before, because it only accepts values produced by
-@racket[item] instead of arbitrary text. This difference is reflected
-in the use of @litchar{[}...@litchar{]} for the arguments to
-@racket[itemlist] instead of  @litchar["{"]...@litchar["}"]:
+@racket[itemlist] 创建一个符号列表，@racket[item] 创建列表的一个条目。
+@racket[itemlist] 的使用方式和前面有些许区别，因为它仅接受 @racket[item]
+产出的值，而不是任意文本。这种不同体现在接受参数时使用 @litchar{[}...@litchar{]}，
+而不是 @litchar["{"]...@litchar["}"] 上：
 
          @sample|{
-           @centered{@bold{Notice to Mice}}
+           @centered{@bold{对老鼠的通知}}
 
-           @itemlist[@item{We have cookies for you.}
-                     @item{If you want to eat a cookie,
-                           you must bring your own straw.}]
+           @itemlist[@item{我们能为你提供饼干。}
+                     @item{但是如果你想吃饼干，你得自带稻草。}]
          }|
 
-which renders as
+这渲染得到：
 
          @result{
-           @centered{@bold{Notice to Mice}}
+           @centered{@bold{对老鼠的通知}}
 
-           @itemlist[@item{We have cookies for you.}
-                     @item{If you want to eat a cookie,
-                           you must bring your own straw.}]
+           @itemlist[@item{我们能为你提供饼干。}
+                     @item{但是如果你想吃饼干，你得自带稻草。}]
          }
 
-@sub*section{Tables}
+@sub*section{表格}
 
-The @racket[tabular] function takes a list of lists to organize into a
-two-dimensional table. By default, no spacing is added between columns,
-so supply a @racket[#:sep] argument to acts as a column separator.
-For example,
+@racket[tabular] 函数接收一个列表的列表，渲染得到一个二维的表格。默认情况下，
+列直接没有分割，使用 @racket[#:sep] 参数可以添加列分隔符，例如：
 
    @sample|{
      @tabular[#:sep @hspace[1]
-              (list (list @bold{Animal} @bold{Food})
-                    (list "mouse"       "cookie")
-                    (list "moose"       "muffin"))]
+              (list (list @bold{动物} @bold{食物})
+                    (list "老鼠"       "饼干")
+                    (list "驯鹿"       "松饼"))]
    }|
 
-renders as
+渲染得到
 
    @result{
      @tabular[#:sep @hspace[1]
-              (list (list @bold{Animal} @bold{Food})
-                    (list "mouse"       "cookie")
-                    (list "moose"       "muffin"))]
+              (list (list @bold{动物} @bold{食物})
+                    (list "老鼠"       "饼干")
+                    (list "驯鹿"       "松饼"))]
    }
 
 @; ----------------------------------------
