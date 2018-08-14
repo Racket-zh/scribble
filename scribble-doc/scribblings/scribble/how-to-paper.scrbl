@@ -252,7 +252,7 @@ Scribble 当前仅支持一种形式的 HTML 输出。你可以替换输出页�
 
 @sub*section{枚举}
 
-@racket[itemlist] 创建一个符号列表，@racket[item] 创建列表的一个条目。
+@racket[itemlist] 创建一个无序符号列表，@racket[item] 创建列表的一个条目。
 @racket[itemlist] 的使用方式和前面有些许区别，因为它仅接受 @racket[item]
 产出的值，而不是任意文本。这种不同体现在接受参数时使用 @litchar{[}...@litchar{]}，
 而不是 @litchar["{"]...@litchar["}"] 上：
@@ -295,88 +295,77 @@ Scribble 当前仅支持一种形式的 HTML 输出。你可以替换输出页�
    }
 
 @; ----------------------------------------
-@section{Text Mode vs. Racket Mode for Arguments}
+@section{参数的使用：文本模式 vs. Racket 模式}
 
-When @litchar{[}...@litchar{]} surrounds the arguments of an
-operation, the argument expressions are in Racket mode rather than
-text mode. Even in Racket mode, @litchar["@"] can be used to apply
-operations; once the @"@" syntax is enabled through a
-language like @racketmodname[scribble/base] (as opposed to
-@racketmodname[racket]), it behaves the same in both Racket mode and
-text mode.
+一个操作符的参数使用 @litchar{[}...@litchar{]} 括起来的话，它们处于
+Racket 模式而不是文本模式。即使在 Racket 模式中，仍可使用 @litchar["@"]
+调用操作符；在如 @racketmodname[scribble/base] 语言（对应 @racketmodname[racket]）
+中，@"@" 语法被启用，其行为在 Racket 和文本模式中一致。
 
-One advantage of using Racket mode for the arguments to
-@racket[itemlist] is that we can pass a keyword-tagged optional
-argument to @racket[itemlist]. In particular, if you want a list with
-numbers instead of bullets, supply the @racket['ordered] style to
-@racket[itemlist] using the @racket[#:style] keyword:
+参数中使用 Racket 模式的一个好处是我们可以传递关键字标记的可选参数。例如对于
+@racket[itemlist]，如果我们希望生成一个数字符号列表而不是无序符号列表，就可以
+使用 @racket[#:style] 关键字传递一个 @racket['ordered] 样式参数。
 
          @sample|{
            @itemlist[#:style 'ordered
-                     @item{Eat cookie.}
-                     @item{Drink milk.}
-                     @item{Wipe mouth.}
+                     @item{吃饼干。}
+                     @item{喝牛奶。}
+                     @item{擦嘴。}
                      @item{...}]
          }|
 
-An operation doesn't care whether it's used with
-@litchar{[}...@litchar{]} or @litchar["{"]...@litchar["}"]. Roughly,
-@litchar["{"]...@litchar["}"] forms an argument that is a
-string. (Only roughly, though. Newlines or uses of @litchar["@"]
-within @litchar["{"]...@litchar["}"] complicate the picture, and we'll
-get back to that soon.) So,
+操作符并不在乎参数是怎么传递过来的，不管是
+@litchar{[}...@litchar{]} 还是 @litchar["{"]...@litchar["}"]。
+大致地说 @litchar["{"]...@litchar["}"] 用于形成字符串类型的参数
+(仅大致上而已。@litchar["{"]...@litchar["}"] 进行换行以及使用 @litchar["@"]
+使得问题变得复杂了一点，我们将回到这点），所以
 
       @sample|{
           @italic{Yummy!}
       }|
 
-is equivalent to
+等价于
 
       @sample|{
           @italic["Yummy!"]
       }|
 
-which is equivalent to the Racket expression
+同时也等价于 Racket 表达式
 
       @racketblock[
           (italic "Yummy!")
       ]
 
-These equivalences explain why Scribble functions are documented in
-Racket notation. If you're reading this in HTML format, you can click
-@racket[italic] above to access its documentation. The documentation
-won't completely make sense, yet, but it will by the end of this
-chapter.
+这种等价关系也解释了为何 Scribble 函数文档采用 Racket 中的表示法。
+如果你正在读此文档的 HTMl 格式，可以点击上面的 @racket[italic] 来
+访问其文档。你可能暂时不能理解该文档，但是本章结束后你应该就能理解了。
 
-What if you want to provide arguments in text mode, but you also want
-to supply other optional arguments? You can use both
-@litchar{[}...@litchar{]} and @litchar["{"]...@litchar["}"] for an
-operation, as long as the @litchar{[}...@litchar{]} is first, and as
-long as no character separate the closing @litchar{]} from the
-opening @litchar["{"]. For example, calling @racket[italic] is the
-same as using @racket[elem] with the @racket['italic] style:
+如果你希望在文本模式中提供参数，但同时也希望能传递其它的可选参数，
+该怎么办？一个操作符上可以同时使用 @litchar{[}...@litchar{]} 和
+@litchar["{"]...@litchar["}"]，只要 @litchar{[}...@litchar{]} 在前，
+且没有字符分割右闭 @litchar{]} 字符和左开字符 @litchar["{"] 即可。
+例如，调用 @racket[italic] 等同于使用 @racket[elem] 并加上
+@racket['italic] 样式：
 
       @sample|{
         @elem[#:style 'italic]{Yummy!}
       }|
 
-You can also @emph{omit} both @litchar{[}...@litchar{]} and
-@litchar["{"]...@litchar["}"]. In that case, the Racket expression
-after @litchar["@"] is used directly instead of applied as an
-operation. For example,
+你还能 @emph{omit} @litchar{[}...@litchar{]} 和
+@litchar["{"]...@litchar["}"]。这种情况下 @litchar["@"] 后的 Racket
+表达式直接被使用，而不是被当作一个操作符。例如，
 
      @sample|{
        1 plus 2 is @(number->string (+ 1 2)).
      }|
 
-renders as
+渲染得
 
      @result{
        1 plus 2 is @(number->string (+ 1 2)).
      }
 
-The call to @racket[number->string] is needed because a naked number
-is not valid as document content.
+对于 @racket[number->string] 的调用是必要的，因为数不是合法的文档内容。
 
 @; ----------------------------------------
 @section[#:tag "how-to:reader"]{@"@" Syntax Basics}
