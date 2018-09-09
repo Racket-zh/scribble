@@ -77,7 +77,7 @@
               (let ([from-pkgs (resolve-get/tentative p ri '(exporting-packages #f))])
                 (if (and from-pkgs (pair? from-pkgs))
                     (string-append
-                     " | Package："
+                     " | 包："
                      (string-join (map ~a from-pkgs) "、"))
                     ""))))
             e)
