@@ -214,7 +214,7 @@
    #:style (make-style #f
                        (list "plainlink"
                              (hover-property
-                              (format "使用“raco pkg install ~a”安装该package"
+                              (format "使用“raco pkg install ~a”安装此包"
                                       pkg))))))
 
 (define (*defmodule names modpaths module-path packages link-target? lang content req)
