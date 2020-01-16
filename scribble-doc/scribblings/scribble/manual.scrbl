@@ -184,13 +184,14 @@ produces the typeset result
                        [#:keep-lang-line? keep? any/c #t]
                        [#:line-numbers line-numbers (or/c #f exact-nonnegative-integer?) #f]
                        [#:line-number-sep line-number-sep exact-nonnegative-integer? 1]
-                       [#:block? block? #t]
+                       [#:block? return-block? any/c #t]
                        [strs string?] ...)
-         block?]{
+         (if return-block? block? element?)]{
  A function-based version of @racket[codeblock], allowing you to compute the @racket[strs] arguments.
 
  Unlike @racket[codeblock], the default @racket[context] argument (@racket[#f]) implies that
- the context is untouched. The other arguments are treated the same way.
+ the context is untouched and the @racket[return-block?] argument determines the result
+ structure. The other arguments are treated the same way as @racket[codeblock].
 }
 
 @; ----------------------------------------
@@ -685,7 +686,7 @@ specified explicitly with @racket[#:packages]. Each @racket[pkg-expr]
 result is passed on to a function like @racket[tt] for
 typesetting. Provide an empty sequence after @racket[#:packages] to
 suppress any package name in the output. Each @racket[pkg-expr]
-expression is are duplicated for a  @racket[declare-exporting] form,
+expression is duplicated for a  @racket[declare-exporting] form,
 unless @racket[#:no-declare] is specified.
 
 Each @racket[option] form can appear at most once, and @racket[#:lang]
@@ -1713,9 +1714,8 @@ Typesets the given combination of a GUI's menu and item name.}
 @tech{decode}d @racket[pre-content] as a file name (e.g., in
 typewriter font and in quotes).}
 
-@defproc[(exec [pre-content pre-content?] ...) element?]{Typesets the
-@tech{decode}d @racket[pre-content] as a command line (e.g., in
-typewriter font).}
+@defproc[(exec [content content?] ...) element?]{Typesets the
+@racket[content] as a command line (e.g., in typewriter font).}
 
 @defproc[(envvar [pre-content pre-content?] ...) element?]{Typesets the given
 @tech{decode}d @racket[pre-content] as an environment variable (e.g.,
@@ -1909,7 +1909,8 @@ order as given.}
                     [#:author author (or/c #f pre-content?) #f]
                     [#:location location (or/c #f pre-content?) #f]
                     [#:date date (or/c #f pre-content?) #f] 
-                    [#:url url (or/c #f pre-content?) #f])
+                    [#:url url (or/c #f pre-content?) #f]
+                    [#:note note (or/c #f pre-content?) #f])
          bib-entry?]{
 
 Creates a bibliography entry. The @racket[key] is used to refer to the
@@ -1942,7 +1943,12 @@ the entry:
        bibliography using @racket[tt] and hyperlinked, or it is
        omitted if given as @racket[#f].}
 
-]}
+ @item{@racket[note] is an optional comment about the work. It is typeset
+       in the bibliography as given, and appears directly after the date
+       (or URL, if given) with no space or punctuation in between.}
+]
+
+@history[#:changed "1.29" @elem{Added the @racket[#:note] option.}]}
 
 
 @defproc[(bib-entry? [v any/c]) boolean?]{
@@ -2021,7 +2027,7 @@ that is hyperlinked to an explanation.}
 
 @defthing[undefined-const element?]{Returns an element for @|undefined-const|.}
 
-@defproc[(commandline [pre-content pre-content?] ...) paragraph?]{Produces
+@defproc[(commandline [content content?] ...) paragraph?]{Produces
 an inset command-line example (e.g., in typewriter font).}
 
 @defproc[(inset-flow [pre-flow pre-flow?] ...) nested-flow?]{
@@ -2194,7 +2200,7 @@ For HTML rendering:
        @filepath{manual-style.css} from the @filepath{scribble}
        collection in @racket[html-defaults].}
 
- @item{The file @filepath{manual-files.css} from the
+ @item{The file @filepath{manual-fonts.css} from the
        @filepath{scribble} collection is designated as an additional
        accompanying file in @racket[html-defaults].}
 

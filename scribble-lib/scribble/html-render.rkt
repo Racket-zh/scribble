@@ -226,6 +226,7 @@
         ([class "searchbox"]
          [style ,(sa "color: "dimcolor";")]
          [type "text"]
+         [tabindex "1"]
          [value ,emptylabel]
          [title "输入搜索字符串以搜索手册"]
          [onkeypress ,(format "return DoSearchKey(event, this, ~s, ~s);"
@@ -338,7 +339,7 @@
             (if (path? p)
                 p
                 (collects-relative->path p)))))
-    
+
     ;; ----------------------------------------
 
     (define/override (start-collect ds fns ci)
@@ -485,7 +486,7 @@
                                     (serialize tag)))))
 
     (define/private (link-element-indirect? e)
-      (memq 'indirect-link 
+      (memq 'indirect-link
             (let ([s (element-style e)])
               (or (and (style? s)
                        (style-properties s))
@@ -539,7 +540,7 @@
                      (let-values ([(base name dir?) (split-path path)])
                        (cond
                         [(and empty-ok?
-                              dir? 
+                              dir?
                               (equal? (format "~a" name) (format "~a" ext-id)))
                          #f]
                         [(path? base)
@@ -593,7 +594,7 @@
                   (part-parts t)))
         (define id (format "tocview_~a" i))
         (define last? (eq? t (last toc-chain)))
-        (define expand? (or (and last? 
+        (define expand? (or (and last?
                                  (or (not has-sub-parts?)
                                      sub-parts-on-other-page?))
                             (and has-sub-parts?
@@ -687,8 +688,8 @@
                   h?)))
 
     (define/private (render-onthispage-contents d ri top box-class sections-in-toc?)
-        (let ([nearly-top? (lambda (d) 
-                             ;; If ToC would be collapsed, then 
+        (let ([nearly-top? (lambda (d)
+                             ;; If ToC would be collapsed, then
                              ;; no section is nearly the top
                              (if (not sections-in-toc?)
                                  #f
@@ -731,13 +732,13 @@
                                    prefixes)])
                  (append*
                   ;; don't include the section if it's in the TOC
-                  (if (or (nearly-top? d) 
+                  (if (or (nearly-top? d)
                           (part-style? d 'toc-hidden))
-                      null 
+                      null
                       (list (vector d prefixes d)))
                   ;; get internal targets:
                   (map (lambda (v) (vector v prefixes d)) (append-map block-targets (part-blocks d)))
-                  (map (lambda (p) (if (or (part-whole-page? p ri) 
+                  (map (lambda (p) (if (or (part-whole-page? p ri)
                                            (and (part-style? p 'toc-hidden)
                                                 (all-toc-hidden? p)))
                                        null
@@ -824,14 +825,14 @@
                                       (style-properties (part-style d)))
                                (let ([p (part-parent d ri)])
                                  (and p (loop p)))))]
-               [prefix-file (or prefix-file 
+               [prefix-file (or prefix-file
                                 (and defaults
                                      (let ([v (html-defaults-prefix-path defaults)])
                                        (if (bytes? v)
                                            v
                                            (collects-relative->path v))))
                                 scribble-prefix-html)]
-               [style-file (or style-file 
+               [style-file (or style-file
                                (and defaults
                                     (let ([v (html-defaults-style-path defaults)])
                                       (if (bytes? v)
@@ -845,18 +846,18 @@
                                           ,(content->string (strip-aux c) this d ri)))]
                             [else `(title)])]
                [dir-depth (part-nesting-depth d ri)]
-               [extract (lambda (pred get) (extract-part-style-files 
+               [extract (lambda (pred get) (extract-part-style-files
                                             d
                                             ri
                                             (lambda (p) (part-whole-page? p ri))
                                             pred
                                             get))])
           (unless (bytes? style-file)
-            (unless (lookup-path style-file alt-paths) 
+            (unless (lookup-path style-file alt-paths)
               (install-file style-file)))
-          (unless (lookup-path scribble-css alt-paths) 
+          (unless (lookup-path scribble-css alt-paths)
             (install-file scribble-css))
-          (unless (lookup-path script-file alt-paths) 
+          (unless (lookup-path script-file alt-paths)
             (install-file script-file))
           (if (bytes? prefix-file)
               (display prefix-file)
@@ -874,7 +875,7 @@
                           [content "width=device-width, initial-scale=0.8"]))
                    ,title
                    ,(scribble-css-contents scribble-css
-                                           (lookup-path scribble-css alt-paths) 
+                                           (lookup-path scribble-css alt-paths)
                                            dir-depth)
                    ,@(map (lambda (style-file)
                             (if (or (bytes? style-file) (url? style-file))
@@ -905,7 +906,9 @@
                        (head-extra-xexpr p)))
                  (body ([id ,(or (extract-part-body-id d ri)
                                  "scribble-racket-lang-org")])
-                   ,@(render-toc-view d ri)
+                   ,@(if (part-style? d 'no-toc+aux)
+                         null
+                         (render-toc-view d ri))
                    (div ([class "maincolumn"])
                      (div ([class "main"])
                        ,@(parameterize ([current-version (extract-version d)])
@@ -959,7 +962,7 @@
         (cond [(and (toc-part? d ri) (pair? (part-parts d))) (car (part-parts d))]
               [(not next0)
                (let loop ([p parent])
-                 (and p 
+                 (and p
                       (toc-part? p ri)
                       (let-values ([(prev next) (find-siblings p ri)])
                         (or next
@@ -1095,9 +1098,9 @@
       (for/or ([v (in-list (style-properties (part-style d)))])
         (and (render-convertible-as? v)
              (render-convertible-as-types v))))
-    
+
     (define/override (render-part-content d ri)
-      (parameterize ([current-render-convertible-requests (or (extract-render-convertible-as d) 
+      (parameterize ([current-render-convertible-requests (or (extract-render-convertible-as d)
                                                               (current-render-convertible-requests))])
         (let ([number (collected-info-number (part-collected-info d ri))])
           `(,@(let ([pres (extract-pretitle d)])
@@ -1108,7 +1111,7 @@
                 [(and (not (part-title-content d)) (null? number)) null]
                 [(part-style? d 'hidden)
                  (map (lambda (t)
-                        `(a ((name ,(format "~a" (anchor-name 
+                        `(a ((name ,(format "~a" (anchor-name
                                                   (add-current-tag-prefix
                                                    (tag-key t ri))))))))
                       (part-tags d))]
@@ -1198,8 +1201,8 @@
                      (null? attrs))
                 contents
                 `((,(or (style->tag style)
-                        (if (memq 'div (style-properties style)) 
-                            'div 
+                        (if (memq 'div (style-properties style))
+                            'div
                             'p))
                    [,@(combine-class
                        (case (style-name style)
@@ -1278,7 +1281,7 @@
                       (call-with-input-file*
                        src
                        (lambda (in)
-                         (with-handlers ([exn:fail? (lambda (exn) 
+                         (with-handlers ([exn:fail? (lambda (exn)
                                                       (log-warning
                                                        (format "warning: error while reading SVG file for size: ~a"
                                                                (if (exn? exn)
@@ -1286,7 +1289,7 @@
                                                                    (format "~e" exn))))
                                                       null)])
                            (let* ([d (xml:read-xml in)]
-                                  [attribs (xml:element-attributes 
+                                  [attribs (xml:element-attributes
                                             (xml:document-element d))]
                                   [check-name (lambda (n)
                                                 (lambda (a)
@@ -1325,11 +1328,11 @@
                        null)
                  ,@sz
                  ,@(attribs))
-                ,@(if svg? 
+                ,@(if svg?
                       `((param ([name "src"] [value ,srcref])))
                       null)))))]
         [(element-style-property-matching e script-property?)
-         => 
+         =>
          (lambda (v)
            (let* ([t `[type ,(script-property-type v)]]
                   [s (script-property-script v)]
@@ -1368,7 +1371,7 @@
                                           (string=? "" (apply string-append (format-number n '("")))))))
                                (eq? 'number (link-render-style-at-element e))
                                (empty-content? (element-content e)))])
-             
+
              (if (or indirect-link? dest)
                  `(,@(cond
                        [number-link?
@@ -1444,9 +1447,9 @@
                      ,@(if (empty-content? (element-content e))
                          `(,(format "~s" (tag-key (link-element-tag e) ri)))
                          (render-plain-content e part ri))))))))]
-        [else 
+        [else
          (render-plain-content e part ri)]))
-    
+
     (define/private (render-as-convertible e requests)
       (for/or ([request (in-list requests)])
         (cond
@@ -1460,7 +1463,7 @@
                   (convert e 'png@2x-bytes+bounds)
                   (convert e 'png@2x-bytes))]
              [else #f])
-           => 
+           =>
            (lambda (cvt)
              (let* ([bstr (if (list? cvt) (first cvt) cvt)]
                     [w (if (list? cvt)
@@ -1583,7 +1586,7 @@
                                     (map (lambda (c) 'nbsp) (string->list str)))]
                                  [else
                                   (super render-content e part ri)])])
-          (if (and (null? attribs) 
+          (if (and (null? attribs)
                    (not link?)
                    (not anchor?)
                    (not newline?)
@@ -1600,7 +1603,7 @@
                    [alt-tag alt-tag]
                    [link? 'a]
                    [newline? 'br]
-                   [else 'span]) 
+                   [else 'span])
                  ,(append
                    (if link-resource
                        `([href ,(install-file link-resource)])
@@ -1613,6 +1616,7 @@
        (cond
         [(symbol? name)
          (case name
+           [(emph) '([class "emph"])]
            [(italic) '([style "font-family: 楷体"])]
            [(bold) '([style "font-weight: bold"])]
            [(tt) '([class "stt"])]
@@ -1813,7 +1817,7 @@
            ;; ("Fonts with proper angle brackets")
            ;;
            ;; Do we still need this?  See test page at <http://jsbin.com/okizeb/3>.
-           ;; 
+           ;;
            ;; More background:
            ;;
            ;; HTML 4 says (in HTMLsymbol.dtd):
@@ -1836,10 +1840,10 @@
            [(rang) '(#x203a)] ; SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
 
            [else (list i)])]
-        [else 
+        [else
          (log-error (format "Unrecognized element in content: ~e" i))
          (list (format "~s" i))]))
-    
+
     (define/private (ascii-ize s)
       (if (= (string-utf-8-length s) (string-length s))
           (list s)
@@ -1931,8 +1935,8 @@
     (define/override (include-navigation?) #t)
 
     (define/override (collect ds fns fp [demand (lambda (key ci) #f)])
-      (super collect 
-             ds 
+      (super collect
+             ds
              (map (lambda (fn) (build-path fn "index.html")) fns)
              fp
              demand))
@@ -1943,6 +1947,7 @@
     (define/override (start-collect ds fns ci)
       (parameterize ([current-part-files (make-hash)])
         (for-each (lambda (d fn)
+                    (check-duplicate-filename fn)
                     (parameterize ([collecting-sub
                                     (if (part-style? d 'non-toc)
                                         1
@@ -1961,7 +1966,7 @@
     (define/override (collect-part d parent ci number sub-init-number sub-init-numberers)
       (let ([prev-sub (collecting-sub)])
         (parameterize ([collecting-sub (if (part-style? d 'toc)
-                                           1 
+                                           1
                                            (add1 prev-sub))]
                        [collecting-whole-page (prev-sub . <= . 1)])
           (if (and (current-part-whole-page? d)

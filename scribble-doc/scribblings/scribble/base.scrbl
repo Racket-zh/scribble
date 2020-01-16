@@ -467,7 +467,9 @@ gets progressively smaller.}
 gets progressively larger.}
 
 @defproc[(emph [pre-content pre-content?] ...) element?]{
-The same as @racket[italic].}
+Like @racket[elem], but emphasised. Typically, italics are used for
+emphasis. Uses of @racket[emph] can be nested; typically this causes
+the text to alternate between italic and upright.}
 
 @defproc[(literal [str string?] ...+) element?]{
 
@@ -737,7 +739,7 @@ which is normally defined using @racket[elemtag].}
 Creates an index element given a plain-text string---or list of
 strings for a hierarchy, such as @racket['("strings" "plain")] for a
 ``plain'' entry below a more general ``strings'' entry. As index keys,
-the strings are ``cleaned'' using @racket[clean-up-index-strings]. The
+the strings are ``cleaned'' using @racket[clean-up-index-string]. The
 strings (without clean-up) also serve as the text to render in the
 index. The @tech{decode}d @racket[pre-content] is the text to appear
 inline as the index target.

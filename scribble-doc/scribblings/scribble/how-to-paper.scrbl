@@ -1,7 +1,7 @@
 #lang scribble/doc
 @(require scribble/manual scribble/bnf "utils.rkt"
           pict
-          (for-label scriblib/figure scribble/base scribble/sigplan
+          (for-label scriblib/figure scribble/base (only-in scribble/acmart abstract)
                      (except-in pict table)))
 
 @(define-syntax-rule (samplemod . text) (codeblock . text))
@@ -151,7 +151,7 @@ Scribble 当前仅支持一种形式的 HTML 输出。你可以替换输出页�
 当然，你可能应该考虑换个话题---首先，你可以将第一行修改为：
 
           @samplemod|{
-            #lang scribble/sigplan
+            #lang scribble/acmart
           }|
 
 如果你在准备一份 Racket 库文档，将第一行修改为：
@@ -163,13 +163,13 @@ Scribble 当前仅支持一种形式的 HTML 输出。你可以替换输出页�
 其输出中将会有一个单独的标题页，该页包含文档摘要，且最上一级的小节变成会另起一页
 开始的章节。如果将文档分割成多个文件，主文档的第一行决定输出的格式。
 
-使用 @racketmodname[scribble/sigplan] 或者 @racketmodname[scribble/manual]
+使用 @racketmodname[scribble/acmart] 或者 @racketmodname[scribble/manual]
 不会改变文档渲染出的 HTML---除了 @racketmodname[scribble/manual] 会给文档添加
 一个版本号外---不过它会改变文档中可用的绑定。例如，
-@racketmodname[scribble/sigplan] 格式的文档中，介绍文字可以使用 @racket[abstract] 标记：
+@racketmodname[scribble/acmart] 格式的文档中，介绍文字可以使用 @racket[abstract] 标记：
 
           @samplemod|{
-            #lang scribble/sigplan
+            #lang scribble/acmart
 
             @title{论老鼠吃饼干的习惯}
 
@@ -186,7 +186,7 @@ Scribble 当前仅支持一种形式的 HTML 输出。你可以替换输出页�
 
 当一个文档通过多个文件实现，改变主文档的语言将改变文档所有部分的样式设定，但是
 它不会为各子文件引入该语言的绑定。例如，如果你改变了 @filepath{mouse.scrbl} 的
-语言为 @racketmodname[scribble/sigplan]，那么 @racket[abstract] 将在
+语言为 @racketmodname[scribble/acmart]，那么 @racket[abstract] 将在
 @filepath{mouse.scrbl} 中可用，但在 @filepath{milk.scrbl} 或
 @filepath{straw.scrbl} 中仍不可用。换句话说，操作符名字是词法作用域的。
 
@@ -194,7 +194,7 @@ Scribble 当前仅支持一种形式的 HTML 输出。你可以替换输出页�
 @section{更多函数}
 
 @racketmodname[scribble/base] 语言提供了一组基本操作
-（@racketmodname[scribble/sigplan] 和 @racketmodname[scribble/manual] 是
+（@racketmodname[scribble/acmart] 和 @racketmodname[scribble/manual] 二者是
 @racketmodname[scribble/base] 的超集）。提供的这些操作很多是可以引用于文本的样式。
 
           @sample|{
@@ -433,7 +433,7 @@ label), then the string is typically provided through
 Sometimes, both @litchar{[}...@litchar{]} and
 @litchar["{"]...@litchar["}"] are used, where the former surround
 Racket arguments that precede text to typeset. Finally, if a form is a
-purely Racket-level form with not typeset result, such as a
+purely Racket-level form with no typeset result, such as a
 @racket[require] to import more operations, then typically just
 @litchar["@"] is used.
 
@@ -515,7 +515,7 @@ and @litchar{'} to suitable curly quotes.
 The decoding process for document's stream is ultimately determined by
 the @hash-lang[] line that starts the document.  The
 @racketmodname[scribble/base], @racketmodname[scribble/manual], and
-@racketmodname[scribble/sigplan] languages all use the same
+@racketmodname[scribble/acmart] languages all use the same
 @racket[decode] operation.  The @racketmodname[scribble/text] language,
 however, acts more like a plain-text generator and preprocessor, and it
 does not perform any such decoding rules.  (For more on

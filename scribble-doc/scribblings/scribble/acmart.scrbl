@@ -58,6 +58,10 @@ all mutually exclusive.}
 @defidform[natbib]
 @defidform[anonymous]
 @defidform[authorversion]
+@defidform[nonacm]
+@defidform[timestamp]
+@defidform[authordraft]
+@defidform[acmthm]
 @defidform[9pt]
 @defidform[10pt]
 @defidform[11pt]
@@ -101,7 +105,6 @@ Veytsman) provides these defaults and descriptions:
  for the authors’ personal use or posting")
           ;; these options are documented in ACM docs but don't
           ;; appear to exist in the scribble acmart format:
-          #;(
           (list "nonacm" "false"
                 "Use the class typesetting options for a non-ACM\
  document, which will not include the conference/journal\
@@ -112,7 +115,7 @@ Veytsman) provides these defaults and descriptions:
           (list "authordraft" "false"
                 "Whether author’s-draft mode is enabled")
           (list "acmthm" "true"
-                "Whether to define theorem-like environments")))]
+                "Whether to define theorem-like environments"))]
 
 Further details for some of these are provided by the full
 documentation for the acmart LaTeX class.
@@ -158,13 +161,22 @@ Specifies a subtitle.}
                         #f)
                   #f]
                  [#:email email
-                  (or/c pre-content? (listof pre-content?) #f)
-                  #f]
+                  (or/c pre-content? email? (listof email?))
+                  '()]
                  [name pre-content?] ...)
          block?]{
 
  Specifies an author with an optional email address, affiliation, and/or orcid.
  
+@codeblock|{
+  #lang scribble/acmart
+  @title{Title}
+  @author["Unboxed Value"
+          #:email (list (email "user@server.com")
+                        (email-string "case--Int#@GHC.Prim.info"))]}
+
+  @abstract{abstracting abstract title}
+}|
 }
 
 @deftogether[(
@@ -194,9 +206,18 @@ screen version of the image links to the badge authority.
 
 }
 
-@defproc[(email [text pre-content?] ...)
-         email?]{
+@deftogether[(
+@defproc[(email [text pre-content?] ...) email?]
+@defproc[(email-string [text string?] ...) email?]
+)]{
  Creates an @racket[email?] object for use with @racket[author].
+
+ @racket[email-string] is like @racket[email]
+ except that @racket[email-string] only takes
+ @tech[#:doc '(lib "scribblings/reference/reference.scrbl") #:key "string"]{strings},
+ escapes all @tt{%} and @tt{#} characters
+ in the arguments and typesets the email address with the
+ @racket['exact-chars] style.
 }
 
 @defproc[(email? [email any/c]) boolean?]{
